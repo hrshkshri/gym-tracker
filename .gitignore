@@ -3,3 +3,10 @@ node_modules/
 .env*
 !.env.example
 .DS_Store
+*.tsbuildinfo
+
+# Serwist build output (regenerated from src/app/sw.ts on every build)
+public/sw.js
+public/sw.js.map
+public/swe-worker-*.js
+public/swe-worker-*.js.map
