@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToday } from "@/lib/useToday";
 import { SessionCard } from "@/components/SessionCard";
@@ -17,44 +17,58 @@ export default function Home() {
   const router = useRouter();
   const { dayKey, template, todayIso } = useToday();
   const [weight, setWeight] = useState("");
+  const openingRef = useRef(false);
+  const loggingWeightRef = useRef(false);
 
   useEffect(() => {
     sync().catch(() => {});
   }, []);
 
   async function openSession() {
-    const existing = (await getSessions()).find(
-      (s) => s.date === todayIso && s.dayKey === dayKey
-    );
-    if (existing) return router.push(`/session/${existing.id}`);
+    if (openingRef.current) return;
+    openingRef.current = true;
+    try {
+      const existing = (await getSessions()).find(
+        (s) => s.date === todayIso && s.dayKey === dayKey
+      );
+      if (existing) return router.push(`/session/${existing.id}`);
 
-    const t = getTemplate(dayKey);
-    const session: Session = {
-      id: uuid(),
-      date: todayIso,
-      dayKey,
-      title: t.title,
-      cardioDone: false,
-      updatedAt: Date.now(),
-      exercises: t.exercises.map((e) => ({
-        name: e.name,
-        targetSets: e.targetSets,
-        repRange: e.repRange,
-        note: e.note,
-        skipped: false,
-        sets: [],
-      })),
-    };
-    await saveSession(session);
-    router.push(`/session/${session.id}`);
+      const t = getTemplate(dayKey);
+      const session: Session = {
+        id: uuid(),
+        date: todayIso,
+        dayKey,
+        title: t.title,
+        cardioDone: false,
+        updatedAt: Date.now(),
+        exercises: t.exercises.map((e) => ({
+          name: e.name,
+          targetSets: e.targetSets,
+          repRange: e.repRange,
+          note: e.note,
+          skipped: false,
+          sets: [],
+        })),
+      };
+      await saveSession(session);
+      router.push(`/session/${session.id}`);
+    } finally {
+      openingRef.current = false;
+    }
   }
 
   async function logWeight() {
+    if (loggingWeightRef.current) return;
     const kg = parseFloat(weight);
     if (!Number.isFinite(kg)) return;
-    await saveBodyweight({ id: uuid(), date: todayIso, weightKg: kg, updatedAt: Date.now() });
-    setWeight("");
-    sync().catch(() => {});
+    loggingWeightRef.current = true;
+    try {
+      await saveBodyweight({ id: uuid(), date: todayIso, weightKg: kg, updatedAt: Date.now() });
+      setWeight("");
+      sync().catch(() => {});
+    } finally {
+      loggingWeightRef.current = false;
+    }
   }
 
   const isTrainingDay = dayKey !== "rest";
