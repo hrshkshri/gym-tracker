@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { BottomNav } from "@/components/BottomNav";
+import { SyncTrigger } from "@/components/SyncTrigger";
 
 export const metadata: Metadata = {
   title: "Wayne",
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen bg-ink text-white">
+        <SyncTrigger />
         <div className="mx-auto max-w-md pb-20">{children}</div>
         <BottomNav />
       </body>
