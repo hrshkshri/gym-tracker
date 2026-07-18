@@ -1,15 +1,14 @@
 import Dexie, { type Table } from "dexie";
-import type { Session, BodyweightEntry } from "@/lib/types";
+import type { Session } from "@/lib/types";
 
 export interface Mutation {
   id?: number;
-  entity: "session" | "bodyweight";
-  payload: Session | BodyweightEntry;
+  entity: "session";
+  payload: Session;
 }
 
 export class WayneDB extends Dexie {
   sessions!: Table<Session, string>;
-  bodyweights!: Table<BodyweightEntry, string>;
   mutations!: Table<Mutation, number>;
 
   constructor() {
@@ -18,6 +17,10 @@ export class WayneDB extends Dexie {
       sessions: "id, date, dayKey",
       bodyweights: "id, date",
       mutations: "++id, entity",
+    });
+    // v2: bodyweight tracking removed — drop the table.
+    this.version(2).stores({
+      bodyweights: null,
     });
   }
 }

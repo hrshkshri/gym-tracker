@@ -1,7 +1,7 @@
 import { getPendingMutations, clearMutation, mergeRemote } from "./repo";
-import type { Session, BodyweightEntry } from "@/lib/types";
+import type { Session } from "@/lib/types";
 
-const ENDPOINT = { session: "/api/sessions", bodyweight: "/api/bodyweight" } as const;
+const ENDPOINT = { session: "/api/sessions" } as const;
 
 // Push queued mutations. Stops at the first failure (a 5xx/network error means
 // the backend is unreachable, so hammering the rest is pointless) and reports
@@ -32,15 +32,14 @@ export async function flushMutations(
 }
 
 export async function pullRemote(fetchFn: typeof fetch = fetch): Promise<void> {
-  let sRes: Response, bRes: Response;
+  let sRes: Response;
   try {
-    [sRes, bRes] = await Promise.all([fetchFn(ENDPOINT.session), fetchFn(ENDPOINT.bodyweight)]);
+    sRes = await fetchFn(ENDPOINT.session);
   } catch {
     return;
   }
   const sessions = (sRes.ok ? await sRes.json() : []) as Session[];
-  const bodyweights = (bRes.ok ? await bRes.json() : []) as BodyweightEntry[];
-  await mergeRemote(sessions, bodyweights);
+  await mergeRemote(sessions);
 }
 
 // Guard against overlapping syncs: while one is in flight (a stalled connection

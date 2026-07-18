@@ -42,9 +42,3 @@ export interface Session {
   updatedAt: number;   // ms epoch, for last-write-wins
 }
 
-export interface BodyweightEntry {
-  id: string;
-  date: string;        // ISO yyyy-mm-dd
-  weightKg: number;
-  updatedAt: number;
-}

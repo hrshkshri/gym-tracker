@@ -12,7 +12,6 @@ const session = (id: string): Session => ({
 describe("sync", () => {
   beforeEach(async () => {
     await db.sessions.clear();
-    await db.bodyweights.clear();
     await db.mutations.clear();
   });
 
@@ -56,15 +55,13 @@ describe("sync", () => {
     expect(fetchFn).toHaveBeenCalledTimes(1);
   });
 
-  it("pullRemote merges fetched rows into local", async () => {
-    const fetchFn = vi.fn((url: string) =>
-      Promise.resolve({
-        ok: true,
-        json: () =>
-          Promise.resolve(url === "/api/sessions" ? [session("r1")] : []),
-      })
-    );
+  it("pullRemote merges fetched sessions into local", async () => {
+    const fetchFn = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve([session("r1")]),
+    });
     await pullRemote(fetchFn as unknown as typeof fetch);
     expect(await db.sessions.count()).toBe(1);
+    expect(fetchFn).toHaveBeenCalledTimes(1);
   });
 });
