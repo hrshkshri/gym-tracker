@@ -2,9 +2,11 @@ import { DietTables } from "./DietTables";
 
 export default function DietPage() {
   return (
-    <main className="p-5 space-y-4">
-      <h1 className="text-2xl font-bold">Diet</h1>
-      <DietTables />
+    <main className="px-5 pb-6">
+      <h1 className="pt-8 text-[30px] font-bold tracking-tight">Diet</h1>
+      <div className="mt-4">
+        <DietTables />
+      </div>
     </main>
   );
 }

@@ -5,12 +5,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#0a0a0b",
-        surface: "#141416",
-        surface2: "#1d1d20",
-        line: "#2a2a2e",
-        accent: "#c6ff3f",
-        muted: "#8a8a92",
+        ink: "#F5F5F3",        // page background
+        surface: "#FFFFFF",    // cards
+        surface2: "#EFEFEC",   // subtle fills / inputs
+        line: "#ECECE9",       // hairlines
+        accent: "#3E9B72",     // muted moss green
+        "accent-soft": "#EAF4EE",
+        muted: "#A0A0A6",      // tertiary text
+        fg: "#1B1B1E",         // primary text
+        fg2: "#55555C",        // secondary text
       },
     },
   },

@@ -16,7 +16,7 @@ export const DIET: DietPlan = {
     protein: "~180g",
     meals: [
       { meal: "Pre-workout", food: "1 bread + 1 tbsp PB" },
-      { meal: "Breakfast (post-workout)", food: "Milk chai (low sugar) + 2 bread + 1 cheese slice + 4-egg omelette" },
+      { meal: "Breakfast", food: "Milk chai (low sugar) + 4-egg omelette (1 bread mixed in) + 1 bread with PB + 1 cheese slice" },
       { meal: "Mid-morning shake", food: "1 banana + 30g oats + 20g PB + 300ml whole milk + 1 scoop whey" },
       { meal: "Lunch", food: "2 bread + 1 tbsp PB" },
       { meal: "Dinner", food: "100g cooked rice + 300g cooked chicken" },

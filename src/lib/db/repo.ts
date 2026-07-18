@@ -4,9 +4,24 @@ import type { Session, BodyweightEntry } from "@/lib/types";
 
 export type { Mutation };
 
+// Queue one pending mutation per record: replace any earlier unsynced mutation
+// for the same entity+id so the queue can't grow unbounded while offline.
+async function queueMutation(
+  entity: Mutation["entity"],
+  payload: Session | BodyweightEntry
+): Promise<void> {
+  const stale = await db.mutations
+    .where("entity")
+    .equals(entity)
+    .filter((m) => m.payload.id === payload.id)
+    .primaryKeys();
+  if (stale.length) await db.mutations.bulkDelete(stale);
+  await db.mutations.add({ entity, payload });
+}
+
 export async function saveSession(s: Session): Promise<void> {
   await db.sessions.put(s);
-  await db.mutations.add({ entity: "session", payload: s });
+  await queueMutation("session", s);
 }
 
 export async function getSessions(): Promise<Session[]> {
@@ -15,7 +30,7 @@ export async function getSessions(): Promise<Session[]> {
 
 export async function saveBodyweight(b: BodyweightEntry): Promise<void> {
   await db.bodyweights.put(b);
-  await db.mutations.add({ entity: "bodyweight", payload: b });
+  await queueMutation("bodyweight", b);
 }
 
 export async function getBodyweights(): Promise<BodyweightEntry[]> {

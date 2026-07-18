@@ -5,8 +5,11 @@ import { useToday } from "@/lib/useToday";
 import { SessionCard } from "@/components/SessionCard";
 import { DIET } from "@/lib/data/diet";
 import { getSessions, saveSession, saveBodyweight } from "@/lib/db/repo";
-import { sync } from "@/lib/db/sync";
+import { sync, scheduleSync } from "@/lib/db/sync";
 import { getTemplate } from "@/lib/data/templates";
+import { getGreeting } from "@/lib/logic/greeting";
+import { MealChecklist } from "@/components/MealChecklist";
+import { useDailyChecklist } from "@/lib/useDailyChecklist";
 import type { Session } from "@/lib/types";
 
 function uuid() {
@@ -65,7 +68,7 @@ export default function Home() {
     try {
       await saveBodyweight({ id: uuid(), date: todayIso, weightKg: kg, updatedAt: Date.now() });
       setWeight("");
-      sync().catch(() => {});
+      scheduleSync();
     } finally {
       loggingWeightRef.current = false;
     }
@@ -73,19 +76,22 @@ export default function Home() {
 
   const isTrainingDay = dayKey !== "rest";
   const diet = isTrainingDay ? DIET.training : DIET.rest;
+  const greeting = getGreeting(new Date());
+  const { checked, toggle } = useDailyChecklist();
 
   return (
     <main className="p-5 space-y-4">
       <header className="pt-4">
-        <h1 className="text-3xl font-bold tracking-tight">Wayne</h1>
         <p className="text-muted text-sm">
           {new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}
         </p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight">{greeting.hey}</h1>
+        <p className="mt-1 text-accent text-sm font-medium">{greeting.line}</p>
       </header>
 
       <SessionCard template={template} onOpen={openSession} />
 
-      <section className="rounded-2xl bg-surface border border-line p-5">
+      <section className="rounded-3xl bg-surface p-5 shadow-sm">
         <div className="text-xs uppercase tracking-widest text-muted">Fasted weight</div>
         <div className="mt-2 flex gap-2">
           <input
@@ -95,19 +101,19 @@ export default function Home() {
             placeholder="kg"
             className="flex-1 rounded-xl bg-surface2 border border-line px-4 py-3 text-lg"
           />
-          <button onClick={logWeight} className="rounded-xl bg-accent text-ink font-semibold px-5">
+          <button onClick={logWeight} className="rounded-xl bg-accent text-white font-semibold px-5">
             Log
           </button>
         </div>
       </section>
 
+      <MealChecklist day={diet} checked={checked} toggle={toggle} />
+
       <button
         onClick={() => router.push("/diet")}
-        className="w-full text-left rounded-2xl bg-surface border border-line p-5"
+        className="w-full py-1 text-center text-sm font-medium text-muted hover:text-accent"
       >
-        <div className="text-xs uppercase tracking-widest text-muted">{diet.label}</div>
-        <div className="mt-1 text-lg font-semibold">{diet.calories} · {diet.protein}</div>
-        <div className="mt-1 text-sm text-muted">Tap for full diet plan</div>
+        Full diet plan &amp; rules →
       </button>
     </main>
   );
