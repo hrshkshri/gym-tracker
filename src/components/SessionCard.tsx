@@ -11,7 +11,7 @@ export function SessionCard({
   return (
     <button
       onClick={onOpen}
-      className="w-full text-left rounded-2xl bg-surface border border-line p-5 active:scale-[0.99] transition"
+      className="w-full text-left rounded-3xl bg-surface p-5 shadow-sm active:scale-[0.99] transition"
     >
       <div className="text-xs uppercase tracking-widest text-muted">Today</div>
       <div className="mt-1 text-2xl font-semibold">{template.title}</div>

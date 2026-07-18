@@ -14,6 +14,13 @@ export async function connectMongo(): Promise<typeof mongoose> {
   if (!cached!.promise) {
     cached!.promise = mongoose.connect(uri, { dbName: "gym" });
   }
-  cached!.conn = await cached!.promise;
+  try {
+    cached!.conn = await cached!.promise;
+  } catch (err) {
+    // Reset so the next request retries instead of re-awaiting a rejected
+    // promise forever (e.g. after the Atlas IP allowlist is fixed).
+    cached!.promise = null;
+    throw err;
+  }
   return cached!.conn;
 }

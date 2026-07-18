@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { db } from "./dexie";
 import { saveSession } from "./repo";
-import { flushMutations, pullRemote } from "./sync";
+import { flushMutations, pullRemote, sync } from "./sync";
 import type { Session } from "@/lib/types";
 
 const session = (id: string): Session => ({
@@ -19,8 +19,9 @@ describe("sync", () => {
   it("flushMutations POSTs each pending mutation and clears the queue", async () => {
     await saveSession(session("s1"));
     const fetchFn = vi.fn().mockResolvedValue({ ok: true });
-    const count = await flushMutations(fetchFn as unknown as typeof fetch);
-    expect(count).toBe(1);
+    const { flushed, ok } = await flushMutations(fetchFn as unknown as typeof fetch);
+    expect(flushed).toBe(1);
+    expect(ok).toBe(true);
     expect(fetchFn).toHaveBeenCalledWith(
       "/api/sessions",
       expect.objectContaining({ method: "POST" })
@@ -28,11 +29,31 @@ describe("sync", () => {
     expect(await db.mutations.count()).toBe(0);
   });
 
-  it("keeps the mutation queued when the POST fails", async () => {
+  it("keeps the mutation queued and stops flushing when a POST fails", async () => {
+    await saveSession(session("s1"));
+    await saveSession(session("s2"));
+    const fetchFn = vi.fn().mockResolvedValue({ ok: false });
+    const { flushed, ok } = await flushMutations(fetchFn as unknown as typeof fetch);
+    expect(ok).toBe(false);
+    expect(flushed).toBe(0);
+    // Stops at the first failure rather than hammering every queued mutation.
+    expect(fetchFn).toHaveBeenCalledTimes(1);
+    expect(await db.mutations.count()).toBe(2);
+  });
+
+  it("re-saving the same record replaces its queued mutation instead of stacking", async () => {
+    await saveSession(session("s1"));
+    await saveSession(session("s1"));
+    await saveSession(session("s1"));
+    expect(await db.mutations.count()).toBe(1);
+  });
+
+  it("sync skips the remote pull when the push fails", async () => {
     await saveSession(session("s1"));
     const fetchFn = vi.fn().mockResolvedValue({ ok: false });
-    await flushMutations(fetchFn as unknown as typeof fetch);
-    expect(await db.mutations.count()).toBe(1);
+    await sync(fetchFn as unknown as typeof fetch);
+    // Only the failed POST — no follow-up GETs to a backend we know is down.
+    expect(fetchFn).toHaveBeenCalledTimes(1);
   });
 
   it("pullRemote merges fetched rows into local", async () => {
