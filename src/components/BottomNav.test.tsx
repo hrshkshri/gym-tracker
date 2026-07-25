@@ -5,9 +5,9 @@ import { BottomNav } from "./BottomNav";
 vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
 
 describe("BottomNav", () => {
-  it("renders all four destinations", () => {
+  it("renders all destinations", () => {
     render(<BottomNav />);
-    for (const label of ["Today", "History", "Progress", "Diet"]) {
+    for (const label of ["Today", "Plan", "History", "Progress", "Diet"]) {
       expect(screen.getByText(label)).toBeInTheDocument();
     }
   });
