@@ -24,6 +24,19 @@ describe("DAY_TEMPLATES", () => {
     expect(lower.exercises[0].repRange).toBe("5–6");
   });
 
+  it("pull day opens with pull-ups and offers the curl swap", () => {
+    const pull = getTemplate("pull");
+    expect(pull.exercises.map((e) => e.name)).toEqual([
+      "Assisted Pull Ups",
+      "Lat Pulldown",
+      "Chest-Supported Machine Row (neutral grip)",
+      "Face Pulls",
+      "DB Curl",
+    ]);
+    expect(pull.exercises[0].targetSets).toBe(3);
+    expect(pull.exercises[4].note).toBe("or Hammer Curl");
+  });
+
   it("rest day has no exercises", () => {
     expect(getTemplate("rest").exercises).toHaveLength(0);
   });

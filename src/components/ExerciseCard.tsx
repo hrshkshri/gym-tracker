@@ -37,6 +37,7 @@ export function ExerciseCard({
           <div className="text-[17px] font-semibold leading-tight tracking-tight">{exercise.name}</div>
           <div className="mt-1 text-[13px] text-muted">
             {exercise.targetSets} × {exercise.repRange}
+            {exercise.note && <span> · {exercise.note}</span>}
             {meta && <span> · {meta.muscles}</span>}
           </div>
         </div>

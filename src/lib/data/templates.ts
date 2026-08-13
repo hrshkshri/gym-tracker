@@ -19,10 +19,11 @@ export const DAY_TEMPLATES: Record<DayKey, DayTemplate> = {
     dayKey: "pull",
     title: "Pull (Back + Biceps)",
     exercises: [
+      ex("Assisted Pull Ups", 3, "Max"),
+      ex("Lat Pulldown", 3, "10–12"),
       ex("Chest-Supported Machine Row (neutral grip)", 4, "10–12"),
-      ex("Assisted Pull Ups", 4, "Max"),
       ex("Face Pulls", 3, "15"),
-      ex("DB Curl", 3, "12"),
+      ex("DB Curl", 3, "12", "or Hammer Curl"),
     ],
   },
   push: {
