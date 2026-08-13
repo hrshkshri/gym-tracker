@@ -16,6 +16,8 @@ const META: Record<string, ExerciseMeta> = {
   "Leg Extension": { muscles: "Quads", cue: "Pause and squeeze at the top, lower slow." },
   "Leg Curl": { muscles: "Hamstrings", cue: "Full range, no hip rocking — curl with the hamstrings." },
   "Calf Raises": { muscles: "Calves", cue: "Full stretch at the bottom, pause hard at the top." },
+  "Standing Calf Raise": { muscles: "Calves", cue: "Knees locked, full stretch down, pause hard at the top." },
+  "Walking Lunges": { muscles: "Quads · Glutes", cue: "Long step, back knee low, torso tall — drive through the front heel." },
   "Decline Sit-ups": { muscles: "Upper Abs", cue: "Curl ribs toward hips, don't yank the neck." },
 
   // Pull
@@ -44,6 +46,7 @@ const META: Record<string, ExerciseMeta> = {
   "DB Flat Press": { muscles: "Chest · Triceps", cue: "Dumbbells stacked over the elbows, deep stretch, press together." },
   "DB Shoulder Press": { muscles: "Shoulders · Triceps", cue: "Press slightly in, don't clank, full lockout." },
   "Cable Flye": { muscles: "Chest", cue: "Fix a slight elbow bend, hug the reps, squeeze the center." },
+  "Pullover": { muscles: "Chest · Lats · Serratus", cue: "Deep stretch overhead, elbows soft, pull with the lats." },
   "Seated Lateral Raise": { muscles: "Side Delts", cue: "Strict — no torso english, lead with the elbows." },
   "Triceps Overhead Extension": { muscles: "Triceps", cue: "Elbows high and tucked, full stretch behind the head." },
   "Bicycle Crunches": { muscles: "Obliques", cue: "Opposite elbow to knee, slow — twist from the core." },

@@ -9,10 +9,11 @@ export interface ExerciseTemplate {
   note?: string;
 }
 
+// No weekday field: a template can land on more than one weekday (rest is both
+// Thu and Sun), so the weekday → dayKey direction lives in logic/schedule.ts.
 export interface DayTemplate {
   dayKey: DayKey;
   title: string;
-  weekday: number; // 0=Sun..6=Sat
   exercises: ExerciseTemplate[];
   cardio?: string;
 }

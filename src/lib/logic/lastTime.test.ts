@@ -5,8 +5,8 @@ import type { Session } from "@/lib/types";
 const mk = (date: string, name: string, sets: [number, number][]): Session => ({
   id: date + name,
   date,
-  dayKey: "pushA",
-  title: "Push A",
+  dayKey: "push",
+  title: "Push",
   cardioDone: false,
   updatedAt: 0,
   exercises: [

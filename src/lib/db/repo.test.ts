@@ -4,7 +4,7 @@ import { saveSession, getSessions, getPendingMutations, mergeRemote } from "./re
 import type { Session } from "@/lib/types";
 
 const session = (id: string, updatedAt: number): Session => ({
-  id, date: "2026-07-15", dayKey: "pushA", title: "Push A",
+  id, date: "2026-07-15", dayKey: "push", title: "Push",
   cardioDone: false, updatedAt, exercises: [],
 });
 

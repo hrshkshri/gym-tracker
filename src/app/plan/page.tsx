@@ -2,19 +2,19 @@
 import { useState } from "react";
 import { DAY_TEMPLATES } from "@/lib/data/templates";
 import { getDayKeyForWeekday } from "@/lib/logic/schedule";
-import type { DayKey } from "@/lib/types";
 
-// The week in training order (Mon → Sun).
-const WEEK_ORDER: DayKey[] = ["legs", "pullA", "pushA", "run", "pullB", "pushB", "rest"];
+// The week in training order (Mon → Sun), as weekday numbers. Stepping by
+// weekday rather than by day key keeps the two rest days (Thu, Sun) distinct.
+const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0];
 const WEEKDAY_LABEL = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function PlanPage() {
-  const todayKey = getDayKeyForWeekday(new Date().getDay());
-  const [index, setIndex] = useState(() => WEEK_ORDER.indexOf(todayKey));
+  const todayWeekday = new Date().getDay();
+  const [index, setIndex] = useState(() => WEEK_ORDER.indexOf(todayWeekday));
 
-  const dayKey = WEEK_ORDER[index];
-  const day = DAY_TEMPLATES[dayKey];
-  const isToday = dayKey === todayKey;
+  const weekday = WEEK_ORDER[index];
+  const day = DAY_TEMPLATES[getDayKeyForWeekday(weekday)];
+  const isToday = weekday === todayWeekday;
 
   const step = (delta: number) =>
     setIndex((i) => (i + delta + WEEK_ORDER.length) % WEEK_ORDER.length);
@@ -38,7 +38,7 @@ export default function PlanPage() {
         </button>
         <div className="min-w-0 text-center">
           <div className="text-[11px] uppercase tracking-widest text-muted">
-            {WEEKDAY_LABEL[day.weekday]}{isToday ? " · Today" : ""}
+            {WEEKDAY_LABEL[weekday]}{isToday ? " · Today" : ""}
           </div>
           <div className="truncate text-lg font-semibold">{day.title}</div>
         </div>

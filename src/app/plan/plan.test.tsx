@@ -20,7 +20,24 @@ describe("PlanPage", () => {
   it("moves to the next day when the arrow is clicked", () => {
     render(<PlanPage />);
     fireEvent.click(screen.getByLabelText("Next day"));
-    expect(screen.getByText("Pull A (Back + Biceps)")).toBeInTheDocument();
-    expect(screen.getByText(/Barbell Row/)).toBeInTheDocument();
+    expect(screen.getByText("Pull (Back + Biceps)")).toBeInTheDocument();
+    expect(screen.getByText(/Machine Row/)).toBeInTheDocument();
+  });
+
+  it("keeps the two rest days apart — Thu forward, Sun back", () => {
+    render(<PlanPage />);
+    const next = screen.getByLabelText("Next day");
+    fireEvent.click(next); // Tue
+    fireEvent.click(next); // Wed
+    fireEvent.click(next); // Thu
+    expect(screen.getByText("Thu")).toBeInTheDocument();
+    expect(screen.getByText("Rest")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByLabelText("Previous day")); // back to Wed
+    fireEvent.click(screen.getByLabelText("Previous day")); // Tue
+    fireEvent.click(screen.getByLabelText("Previous day")); // Mon
+    fireEvent.click(screen.getByLabelText("Previous day")); // wraps to Sun
+    expect(screen.getByText("Sun")).toBeInTheDocument();
+    expect(screen.getByText("Rest")).toBeInTheDocument();
   });
 });

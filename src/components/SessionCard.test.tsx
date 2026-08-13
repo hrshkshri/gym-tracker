@@ -5,9 +5,9 @@ import { getTemplate } from "@/lib/data/templates";
 
 describe("SessionCard", () => {
   it("shows the session title and exercise count", () => {
-    render(<SessionCard template={getTemplate("pushA")} onOpen={() => {}} />);
-    expect(screen.getByText(/Push A/)).toBeInTheDocument();
-    expect(screen.getByText(/7 exercises/)).toBeInTheDocument();
+    render(<SessionCard template={getTemplate("push")} onOpen={() => {}} />);
+    expect(screen.getByText(/Push/)).toBeInTheDocument();
+    expect(screen.getByText(/6 exercises/)).toBeInTheDocument();
   });
 
   it("calls onOpen when tapped", () => {

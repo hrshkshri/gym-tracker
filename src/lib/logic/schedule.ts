@@ -1,14 +1,14 @@
 export type DayKey =
-  | "legs" | "pullA" | "pushA" | "run" | "pullB" | "pushB" | "rest";
+  | "legs" | "pull" | "push" | "lower" | "upper" | "rest";
 
 const WEEKDAY_TO_DAYKEY: Record<number, DayKey> = {
-  0: "rest",
-  1: "legs",
-  2: "pullA",
-  3: "pushA",
-  4: "run",
-  5: "pullB",
-  6: "pushB",
+  0: "rest",   // Sun
+  1: "legs",   // Mon
+  2: "pull",   // Tue
+  3: "push",   // Wed
+  4: "rest",   // Thu
+  5: "lower",  // Fri
+  6: "upper",  // Sat
 };
 
 export function getDayKeyForWeekday(weekday: number): DayKey {

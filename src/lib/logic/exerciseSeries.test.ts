@@ -3,7 +3,7 @@ import { exerciseTopSetSeries } from "./exerciseSeries";
 import type { Session } from "@/lib/types";
 
 const mk = (date: string, weights: number[]): Session => ({
-  id: date, date, dayKey: "pushA", title: "Push A", cardioDone: false, updatedAt: 0,
+  id: date, date, dayKey: "push", title: "Push", cardioDone: false, updatedAt: 0,
   exercises: [{ name: "Bench", targetSets: weights.length, repRange: "6–8", skipped: false,
     sets: weights.map((w) => ({ weight: w, reps: 8, done: true })) }],
 });
